@@ -3,27 +3,30 @@ using PadelIT.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Web.Http;
+using PadelIT.Database;
 
 namespace PadelIT.Logic
 {
     public class BookingHelper
     {
 
-        private readonly SpelarbasenContext _context;
+        private readonly OldSpelarbasenContext _context;
+        private readonly SpelarbasenContext _dbContext;
 
-        public BookingHelper()
+        public BookingHelper(SpelarbasenContext dbContext)
         {
-            _context = new SpelarbasenContext();
+            _context = new OldSpelarbasenContext();
+            _dbContext = dbContext;
         }
 
         private bool VerifyPlayerId(int playerid)
         {
-            return  _context.Players.Find(playerid) != null;
+            return  _dbContext.Players.Find(playerid) != null;
         }
 
         private bool VerifyIfBookingExist(int playerid, int week, int year)
         {
-            return _context.Bookings.Where(b => b.PlayerId == playerid && b.Week == week && b.Year == year).Any();
+            return _dbContext.Bookings.Where(b => b.PlayerId == playerid && b.Week == week && b.Year == year).Any();
         }
 
         public async Task<bool> AddBooking(int playerid, int week, int year)
@@ -40,14 +43,14 @@ namespace PadelIT.Logic
                     return false;
                 }
 
-                _context.Bookings.Add(new Booking()
+                _dbContext.Bookings.Add(new Booking()
                 {
                     Year = year,
                     Week = week,
                     PlayerId = playerid,
                 });
 
-                await _context.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)

@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PadelIT.Models;
 using PadelIT.Logic;
+using PadelIT.Database;
+using System.Data;
 
 namespace PadelIT.Controllers
 {
@@ -16,15 +18,22 @@ namespace PadelIT.Controllers
     [Route("[controller]")]
     public class BookingsController : ControllerBase
     {
-        private BookingHelper _bookingHelper = new BookingHelper();
-
-        [HttpGet]
-        public IEnumerable<Booking> Get()
+        private BookingHelper _bookingHelper;
+        private readonly SpelarbasenContext _dbContext;
+        public BookingsController(SpelarbasenContext dbContext, BookingHelper bookingHelper)
         {
-            using (var context = new SpelarbasenContext())
-            {
-                return context.Bookings.ToList();
-            }
+            _dbContext = dbContext;
+            _bookingHelper = bookingHelper;
+        }
+
+        
+        [HttpGet]
+        public DataTable? Get()
+        {
+            var isDatabaseConnected = _dbContext.Database.CanConnect();
+            _dbContext.Database.OpenConnection();
+            var dataBaseTables = _dbContext.Database.GetDbConnection().GetSchema("Tables");
+            return dataBaseTables;
         }
 
         [HttpPost("{playerid}/{year}/{week}")]
@@ -38,12 +47,13 @@ namespace PadelIT.Controllers
                     return NotFound();
                 }
                 return Ok(success);
-            } catch (Exception ex) 
-            { 
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
-            
+
         }
     }
-   
+
 }

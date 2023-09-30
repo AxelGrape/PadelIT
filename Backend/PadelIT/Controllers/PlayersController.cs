@@ -17,7 +17,7 @@ namespace PadelIT.Controllers
         [HttpGet]
         public IEnumerable<Player> Get()
         {
-            using (var context = new SpelarbasenContext())
+            using (var context = new OldSpelarbasenContext())
             {
                 return context.Players.ToList();
             }
@@ -26,7 +26,7 @@ namespace PadelIT.Controllers
         [HttpPut("{name}")]
         public IEnumerable<Player> Put(String name)
         {
-            using (var context = new SpelarbasenContext())
+            using (var context = new OldSpelarbasenContext())
             {
                 Player player = new Player();
                 player.Name = name;

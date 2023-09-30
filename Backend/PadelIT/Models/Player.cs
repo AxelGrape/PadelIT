@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PadelIT.Models;
 
-public partial class Player
+public class Player
 {
     public int PlayerId { get; set; }
 

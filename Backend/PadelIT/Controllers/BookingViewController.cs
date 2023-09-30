@@ -18,7 +18,7 @@ namespace PadelIT.Controllers
         [HttpGet("{year}/{week}")]
         public IEnumerable<BookingView> Get(int year, int week)
         {
-            using (var context = new SpelarbasenContext())
+            using (var context = new OldSpelarbasenContext())
             {
                 var query = context.BookingViews.Where(b => b.Year == year && b.Week == week);
                 return query.ToList();

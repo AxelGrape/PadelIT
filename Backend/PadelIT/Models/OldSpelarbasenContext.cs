@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PadelIT.Models;
 
-public partial class SpelarbasenContext : DbContext
+public partial class OldSpelarbasenContext : DbContext
 {
-    public SpelarbasenContext()
+    public OldSpelarbasenContext()
     {
     }
 
-    public SpelarbasenContext(DbContextOptions<SpelarbasenContext> options)
+    public OldSpelarbasenContext(DbContextOptions<OldSpelarbasenContext> options)
         : base(options)
     {
     }

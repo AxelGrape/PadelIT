@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PadelIT.Models;
 
-public partial class BookingView
+public class BookingView
 {
     public int Week { get; set; }
 

@@ -1,59 +1,67 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PadelIT.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Web.Http;
 using PadelIT.Database;
+using PadelIT.Database.Models;
+using PadelIT.Utilities;
 
 namespace PadelIT.Logic
 {
-    public class BookingHelper
+
+    public interface IBookingHelper
+    {
+        List<Booking> GetBookings();
+        List<Booking> GetPlayerBookings(int playerid);
+        Task<Booking> AddBooking(int playerid, int week, int year);
+    }
+
+    public class BookingHelper : IBookingHelper
     {
 
-        private readonly OldSpelarbasenContext _context;
         private readonly SpelarbasenContext _dbContext;
 
         public BookingHelper(SpelarbasenContext dbContext)
         {
-            _context = new OldSpelarbasenContext();
             _dbContext = dbContext;
         }
 
-        private bool VerifyPlayerId(int playerid)
+        public List<Booking> GetBookings()
         {
-            bool playerExists = _context.Players.Find(playerid) != null;
-            return playerExists;
+            return _dbContext.Bookings.ToList();
+        }
+        public List<Booking> GetPlayerBookings(int playerid)
+        {
+            //var playerName = GetPlayerName(playerid);
+            if(!IsPlayerRegistered(playerid))
+                throw new PlayerNotFoundException();
+            return _dbContext.Bookings.Where(b => b.PlayerId == playerid).ToList();
         }
 
-        private bool IsAlreadyBooked(int playerid, int week, int year)
-        {
-            var bookingExists = _dbContext.Bookings.FirstOrDefault(b => b.PlayerId == playerid && b.Week == week && b.Year == year) != null;
-            return bookingExists;
-        }
-
-        public async Task<bool> AddBooking(int playerid, int week, int year)
+        public async Task<Booking> AddBooking(int playerid, int week, int year)
         {
             try
             {
-                if (!VerifyPlayerId(playerid))
+                if (!IsPlayerRegistered(playerid))
                 {
-                    return false;
+                    throw new PlayerNotFoundException();
+                }
+                if (IsBookingAlreadyBooked(playerid, week, year))
+                {
+                    throw new CustomException("Player already booked at that time");
                 }
 
-                if (IsAlreadyBooked(playerid, week, year))
-                {
-                    return false;
-                }
-
-                _dbContext.Bookings.Add(new Booking()
+                Booking booking = new Booking()
                 {
                     Year = year,
                     Week = week,
                     PlayerId = playerid,
-                });
+                };
+                _dbContext.Bookings.Add(booking);
 
                 await _dbContext.SaveChangesAsync();
-                return true;
+
+                return booking;
             }
             catch (Exception ex)
             {
@@ -61,5 +69,18 @@ namespace PadelIT.Logic
             }
             
         }
+        private bool IsPlayerRegistered(int playerid)
+        {
+            bool playerExists = _dbContext.Players.Find(playerid) != null;
+            return playerExists;
+        }
+
+        private bool IsBookingAlreadyBooked(int playerid, int week, int year)
+        {
+            var bookingExists = _dbContext.Bookings.FirstOrDefault(b => b.PlayerId == playerid && b.Week == week && b.Year == year) != null;
+            return bookingExists;
+        }
+        private string? GetPlayerName(int playerid) => _dbContext.Players.Find(playerid)?.Name;
+
     }
 }

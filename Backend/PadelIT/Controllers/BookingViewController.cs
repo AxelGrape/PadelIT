@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using PadelIT.Models;
+using PadelIT.Database;
+using PadelIT.Database.Models;
 
 namespace PadelIT.Controllers
 {
@@ -15,15 +16,17 @@ namespace PadelIT.Controllers
     [Route("[controller]")]
     public class BookingViewController : ControllerBase
     {
+        SpelarbasenContext _dbContext;
+        public BookingViewController(SpelarbasenContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
         [HttpGet("{year}/{week}")]
         public IEnumerable<BookingView> Get(int year, int week)
         {
-            using (var context = new OldSpelarbasenContext())
-            {
-                var query = context.BookingViews.Where(b => b.Year == year && b.Week == week);
-                return query.ToList();
+            var query = _dbContext.BookingViews.Where(b => b.Year == year && b.Week == week);
+            return query.ToList();
 
-            }
         }
     }
 }

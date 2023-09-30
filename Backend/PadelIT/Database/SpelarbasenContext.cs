@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PadelIT.Models;
+using PadelIT.Database.Models;
 
 namespace PadelIT.Database
 {

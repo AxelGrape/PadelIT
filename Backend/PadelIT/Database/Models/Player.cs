@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PadelIT.Models;
+namespace PadelIT.Database.Models;
 
 public class Player
 {

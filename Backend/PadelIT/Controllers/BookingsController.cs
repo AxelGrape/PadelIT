@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using PadelIT.Models;
 using PadelIT.Logic;
 using PadelIT.Database;
 using System.Data;
+using PadelIT.Database.Models;
+using PadelIT.Utilities;
+using System.Net;
 
 namespace PadelIT.Controllers
 {
@@ -18,7 +20,7 @@ namespace PadelIT.Controllers
     [Route("[controller]")]
     public class BookingsController : ControllerBase
     {
-        private BookingHelper _bookingHelper;
+        private IBookingHelper _bookingHelper;
         private readonly SpelarbasenContext _dbContext;
         public BookingsController(SpelarbasenContext dbContext, BookingHelper bookingHelper)
         {
@@ -28,24 +30,42 @@ namespace PadelIT.Controllers
 
         
         [HttpGet]
-        public List<Booking> Get()
+        public IActionResult GetAllBookings()
         {
-
-            var entries = _dbContext.Bookings.ToList();
-            return entries;
+            List<Booking> Bookings = _bookingHelper.GetBookings();
+            return Ok(Bookings);
         }
 
-        [HttpPost("{playerid}/{year}/{week}")]
-        public async Task<IActionResult> Post(int playerid, int year, int week)
+        [HttpGet("{playerId}")]
+        public IActionResult GetPlayersBookings(int playerId)
         {
             try
             {
-                bool success = await _bookingHelper.AddBooking(playerid, week, year);
-                if (!success)
-                {
-                    return NotFound();
-                }
-                return Ok(success);
+                List<Booking> playerBookings = _bookingHelper.GetPlayerBookings(playerId);
+                return Ok(playerBookings);
+            }
+            catch(PlayerNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+        }
+
+        [HttpPost("{playerId}/{year}/{week}")]
+        public async Task<IActionResult> BookPlayer(int playerId, int year, int week)
+        {
+            try
+            {
+                Booking newBooking = await _bookingHelper.AddBooking(playerId, week, year);
+                return Ok(newBooking);
+            }
+            catch (PlayerNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {

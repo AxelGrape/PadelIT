@@ -41,14 +41,14 @@ public partial class SpelarbasenContext : DbContext
                 .HasNoKey()
                 .ToView("BookingView");
 
-            entity.Property(e => e.Name).HasColumnType("text");
+            entity.Property(e => e.Name).HasColumnType("nvarchar(MAX)");
         });
 
         modelBuilder.Entity<Player>(entity =>
         {
             entity.HasKey(e => e.PlayerId).HasName("PK__Players__4A4E74C89FDFCE20");
 
-            entity.Property(e => e.Name).HasColumnType("text");
+            entity.Property(e => e.Name).HasColumnType("nvarchar(MAX)");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using PadelIT.Models;
+using PadelIT.Database;
+using PadelIT.Database.Models;
 
 namespace PadelIT.Controllers
 {
@@ -13,28 +14,28 @@ namespace PadelIT.Controllers
     [Route("[controller]")]
     public class PlayersController : ControllerBase
     {
-
+        private readonly SpelarbasenContext _dbContext;
+        public PlayersController(SpelarbasenContext dbcontext)
+        {
+            _dbContext = dbcontext;
+        }
         [HttpGet]
         public IEnumerable<Player> Get()
         {
-            using (var context = new SpelarbasenContext())
-            {
-                return context.Players.ToList();
-            }
+
+            return _dbContext.Players.ToList();
+
         }
 
         [HttpPut("{name}")]
-        public IEnumerable<Player> Put(String name)
+        public async Task<IEnumerable<Player>> Put(String name)
         {
-            using (var context = new SpelarbasenContext())
-            {
-                Player player = new Player();
-                player.Name = name;
-                context.Players.Add(player);
-                context.SaveChanges();
-                return context.Players.ToList();
-            }
+            Player player = new Player();
+            player.Name = name;
+            _dbContext.Players.Add(player);
+            await _dbContext.SaveChangesAsync();
+            return _dbContext.Players.ToList();
         }
     }
-    
+
 }

@@ -1,11 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using PadelIT.Database;
+using PadelIT.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Services.AddDbContext<SpelarbasenContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
+builder.Services.AddScoped<BookingHelper>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

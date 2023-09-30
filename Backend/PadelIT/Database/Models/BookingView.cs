@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PadelIT.Models;
+namespace PadelIT.Database.Models;
 
-public partial class BookingView
+public class BookingView
 {
     public int Week { get; set; }
 

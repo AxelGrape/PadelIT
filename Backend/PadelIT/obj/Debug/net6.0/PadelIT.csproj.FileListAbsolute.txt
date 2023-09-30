@@ -293,3 +293,6 @@ C:\Users\Axel\repo\PadelIT\Backend\PadelIT\bin\Debug\net6.0\runtimes\win-arm\nat
 C:\Users\Axel\repo\PadelIT\Backend\PadelIT\bin\Debug\net6.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\Axel\repo\PadelIT\Backend\PadelIT\bin\Debug\net6.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Axel\repo\PadelIT\Backend\PadelIT\bin\Debug\net6.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\Axel\repo\PadelIT\Backend\PadelIT\bin\Debug\net6.0\System.Net.Http.Formatting.dll
+C:\Users\Axel\repo\PadelIT\Backend\PadelIT\bin\Debug\net6.0\System.Web.Http.dll
+C:\Users\Axel\repo\PadelIT\Backend\PadelIT\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

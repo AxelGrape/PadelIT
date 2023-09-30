@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PadelIT.Models;
+using PadelIT.Logic;
 
 namespace PadelIT.Controllers
 {
@@ -14,6 +16,8 @@ namespace PadelIT.Controllers
     [Route("[controller]")]
     public class BookingsController : ControllerBase
     {
+        private BookingHelper _bookingHelper = new BookingHelper();
+
         [HttpGet]
         public IEnumerable<Booking> Get()
         {
@@ -23,23 +27,22 @@ namespace PadelIT.Controllers
             }
         }
 
-        [HttpPut("{playerid}/{year}/{week}")]
-        public IEnumerable<Booking> Put(int playerid, int year, int week)
+        [HttpPost("{playerid}/{year}/{week}")]
+        public async Task<IActionResult> Post(int playerid, int year, int week)
         {
-            using (var context = new SpelarbasenContext())
+            try
             {
-
-                var player = context.Players.Find(playerid);
-                if(player == null) { return Enumerable.Empty<Booking>(); }
-
-                Booking booking = new Booking();    
-                booking.Year = year;
-                booking.Week = week;    
-                booking.PlayerId = playerid;
-                context.Bookings.Add(booking);  
-                context.SaveChanges();
-                return context.Bookings.ToList();
+                bool success = await _bookingHelper.AddBooking(playerid, week, year);
+                if (!success)
+                {
+                    return NotFound();
+                }
+                return Ok(success);
+            } catch (Exception ex) 
+            { 
+                return BadRequest(ex.Message);
             }
+            
         }
     }
    

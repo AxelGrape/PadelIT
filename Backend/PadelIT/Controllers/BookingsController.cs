@@ -27,12 +27,12 @@ namespace PadelIT.Controllers
             }
         }
 
-        [HttpPost("{playerid}/{year}/{week}")]
-        public async Task<IActionResult> Post(int playerid, int year, int week)
+        [HttpPost("{name}/{year}/{week}")]
+        public async Task<IActionResult> Post(String name, int year, int week)
         {
             try
             {
-                bool success = await _bookingHelper.AddBooking(playerid, week, year);
+                bool success = await _bookingHelper.AddBooking(name, week, year);
                 if (!success)
                 {
                     return NotFound();

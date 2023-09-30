@@ -21,12 +21,14 @@ namespace PadelIT.Logic
 
         private bool VerifyPlayerId(int playerid)
         {
-            return  _dbContext.Players.Find(playerid) != null;
+            bool playerExists = _context.Players.Find(playerid) != null;
+            return playerExists;
         }
 
-        private bool VerifyIfBookingExist(int playerid, int week, int year)
+        private bool IsAlreadyBooked(int playerid, int week, int year)
         {
-            return _dbContext.Bookings.Where(b => b.PlayerId == playerid && b.Week == week && b.Year == year).Any();
+            var bookingExists = _dbContext.Bookings.FirstOrDefault(b => b.PlayerId == playerid && b.Week == week && b.Year == year) != null;
+            return bookingExists;
         }
 
         public async Task<bool> AddBooking(int playerid, int week, int year)
@@ -38,7 +40,7 @@ namespace PadelIT.Logic
                     return false;
                 }
 
-                if (VerifyIfBookingExist(playerid, week, year))
+                if (IsAlreadyBooked(playerid, week, year))
                 {
                     return false;
                 }
@@ -59,8 +61,5 @@ namespace PadelIT.Logic
             }
             
         }
-
-
-
     }
 }

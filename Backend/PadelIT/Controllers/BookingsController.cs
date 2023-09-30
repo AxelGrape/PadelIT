@@ -28,12 +28,11 @@ namespace PadelIT.Controllers
 
         
         [HttpGet]
-        public DataTable? Get()
+        public List<Booking> Get()
         {
-            var isDatabaseConnected = _dbContext.Database.CanConnect();
-            _dbContext.Database.OpenConnection();
-            var dataBaseTables = _dbContext.Database.GetDbConnection().GetSchema("Tables");
-            return dataBaseTables;
+
+            var entries = _dbContext.Bookings.ToList();
+            return entries;
         }
 
         [HttpPost("{playerid}/{year}/{week}")]

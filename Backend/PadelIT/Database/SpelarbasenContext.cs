@@ -24,6 +24,18 @@ namespace PadelIT.Database
 
                 entity.Property(e => e.Name).HasColumnType("text");
             });
+            modelBuilder.Entity<Booking>(entity =>
+            {
+                entity.HasKey(e => e.BookingId);
+
+                entity.ToTable("Booking");
+
+            });modelBuilder.Entity<Player>(entity =>
+            {
+                entity.HasKey(e => e.PlayerId);
+
+                entity.Property(e => e.Name).HasColumnType("text");
+            });
         }
     }
 }

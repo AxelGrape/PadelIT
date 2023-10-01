@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PadelIT.Database;
 using PadelIT.Database.Models;
+using PadelIT.Logic;
 
 namespace PadelIT.Controllers
 {
@@ -17,12 +18,10 @@ namespace PadelIT.Controllers
     public class BookingViewController : ControllerBase
     {
 
-        private BookingHelper _bookingHelper = new BookingHelper();
-
-        SpelarbasenContext _dbContext;
-        public BookingViewController(SpelarbasenContext dbContext)
+        private BookingHelper _bookingHelper;
+        public BookingViewController( BookingHelper bookingHelper)
         {
-            _dbContext = dbContext;
+            _bookingHelper = bookingHelper;
         }
         [HttpGet("{year}/{week}")]
         public Task<IEnumerable<BookingView>> Get(int year, int week)

@@ -20,11 +20,11 @@ namespace PadelIT.Controllers
     [Route("[controller]")]
     public class BookingsController : ControllerBase
     {
-        private IBookingHelper _bookingHelper;
-        private readonly SpelarbasenContext _dbContext;
+        private readonly IBookingHelper _bookingHelper;
+        private readonly SpelarbasenContext _context;
         public BookingsController(SpelarbasenContext dbContext, BookingHelper bookingHelper)
         {
-            _dbContext = dbContext;
+            _context = dbContext;
             _bookingHelper = bookingHelper;
         }
 
@@ -37,11 +37,11 @@ namespace PadelIT.Controllers
         }
 
         [HttpGet("{playerId}")]
-        public IActionResult GetPlayersBookings(int playerId)
+        public IActionResult GetPlayersBookings(string name)
         {
             try
             {
-                List<Booking> playerBookings = _bookingHelper.GetPlayerBookings(playerId);
+                List<Booking> playerBookings = _bookingHelper.GetPlayerBookings(name);
                 return Ok(playerBookings);
             }
             catch(PlayerNotFoundException ex)

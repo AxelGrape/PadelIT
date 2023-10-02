@@ -38,17 +38,23 @@ namespace PadelIT.Logic
             bool playerExists = _context.Players.FirstOrDefault(x => x.Name == name) != null;
             return playerExists;
         }
+        private Player? GetPlayerIfExists(string name)
+        {
+            var playerExists = _context.Players.FirstOrDefault(x => x.Name == name);
+            return playerExists;
+        }
 
         private string? GetPlayerName(int id) => _context.Players.Find(id)?.Name;
 
         // Returns player id that matches name
         // if no id matches name a new entry is added
         // and the new id is returned
-        private int GetPlayerId(string name)
+        private int GetOrCreatePlayerId(string name)
         {
-            if (PlayerExists(name))
+            var player = GetPlayerIfExists(name);
+            if (player != null)
             {
-                return _context.Players.Where(p => p.Name == name).First().PlayerId;    
+                return player.PlayerId;    
             }
             else
             {
@@ -85,7 +91,7 @@ namespace PadelIT.Logic
         {
             try
             {
-                int playerId = GetPlayerId(name);//Hmmmmm
+                int playerId = GetOrCreatePlayerId(name);//Hmmmmm
 
                 if (!PlayerExists(name))
                 {
@@ -118,7 +124,7 @@ namespace PadelIT.Logic
             //var playerName = GetPlayerName(playerid);
             if (!PlayerExists(name))
                 throw new PlayerNotFoundException();
-            int playerId = GetPlayerId(name);
+            int playerId = GetOrCreatePlayerId(name);
             return _context.Bookings.Where(b => b.PlayerId == playerId).ToList();
         }
         public List<Booking> GetBookings()

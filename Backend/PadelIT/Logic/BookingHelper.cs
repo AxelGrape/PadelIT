@@ -70,19 +70,6 @@ namespace PadelIT.Logic
             return bookingExists;
         }
 
-        private int GetWeekOfYear(DateTime dateTime)
-        {
-            try
-            {
-                return ISOWeek.GetWeekOfYear(dateTime);
-            }
-            catch (Exception ex)
-            {
-                return -1;
-            }
-
-        }
-
         // Creates a new booking 
         // If player name does not exist in
         // database, create a new player and create

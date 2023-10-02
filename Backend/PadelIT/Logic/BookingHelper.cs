@@ -2,6 +2,8 @@
 using PadelIT.Database;
 using PadelIT.Database.Models;
 using PadelIT.Utilities;
+using System;
+using System.Globalization;
 
 namespace PadelIT.Logic
 {
@@ -33,7 +35,7 @@ namespace PadelIT.Logic
 
         private bool PlayerExists(string name)
         {
-            bool playerExists = _context.Players.Find(name) != null;
+            bool playerExists = _context.Players.FirstOrDefault(x => x.Name == name) != null;
             return playerExists;
         }
 
@@ -56,8 +58,23 @@ namespace PadelIT.Logic
 
         private bool BookingExists(int playerid, int week, int year)
         {
-            var bookingExists = _context.Bookings.FirstOrDefault(b => b.PlayerId == playerid && b.Week == week && b.Year == year) != null;
+            var weekDatetime = ISOWeek.ToDateTime(year, week, DayOfWeek.Monday);
+
+            var bookingExists = _context.Bookings.FirstOrDefault(b => b.PlayerId == playerid && b.Datetime.Date == weekDatetime.Date &&b.Datetime.Month == weekDatetime.Month && b.Datetime.Year == year) != null;
             return bookingExists;
+        }
+
+        private int GetWeekOfYear(DateTime dateTime)
+        {
+            try
+            {
+                return ISOWeek.GetWeekOfYear(dateTime);
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+
         }
 
         // Creates a new booking 
@@ -81,8 +98,7 @@ namespace PadelIT.Logic
 
                 Booking booking = new Booking()
                 {
-                    Year = year,
-                    Week = week,
+                    Datetime = ISOWeek.ToDateTime(year, week, DayOfWeek.Monday),
                     PlayerId = playerId,
                 };
                 _context.Bookings.Add(booking);
@@ -115,7 +131,9 @@ namespace PadelIT.Logic
 
         public async Task<IEnumerable<BookingView>> RetrieveBookings(int year, int week)
         {
-            return _context.BookingViews.Where(b => b.Year == year && b.Week == week).ToList();
+            var weekDatetime = ISOWeek.ToDateTime(year, week, DayOfWeek.Monday);
+
+            return _context.BookingViews.Where(b => b.Datetime.Year == year && b.Datetime.Month == weekDatetime.Month && b.Datetime.Date == weekDatetime.Date ).ToList();
         }
 
 

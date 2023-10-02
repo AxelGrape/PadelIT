@@ -9,8 +9,10 @@ public class Booking
 
     public int PlayerId { get; set; }
 
-    public int Week { get; set; }
+    public DateTime Datetime { get; set; } = DateTime.MinValue;
 
-    public int Year { get; set; }
+    //public int Week { get; set; }
+
+    //public int Year { get; set; }
 
 }

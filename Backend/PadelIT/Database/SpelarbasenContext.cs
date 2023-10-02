@@ -22,19 +22,19 @@ namespace PadelIT.Database
                     .HasNoKey()
                     .ToView("BookingView");
 
-                entity.Property(e => e.Name).HasColumnType("text");
+                entity.Property(e => e.Name).HasColumnType("nvarchar(50)");
             });
             modelBuilder.Entity<Booking>(entity =>
             {
                 entity.HasKey(e => e.BookingId);
 
-                entity.ToTable("Booking");
+                entity.ToTable("Bookings");
 
             });modelBuilder.Entity<Player>(entity =>
             {
                 entity.HasKey(e => e.PlayerId);
 
-                entity.Property(e => e.Name).HasColumnType("text");
+                entity.Property(e => e.Name).HasColumnType("nvarchar(50)");
             });
         }
     }

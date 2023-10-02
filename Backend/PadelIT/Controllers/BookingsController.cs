@@ -36,7 +36,7 @@ namespace PadelIT.Controllers
             return Ok(Bookings);
         }
 
-        [HttpGet("{playerId}")]
+        [HttpGet("{name}")]
         public IActionResult GetPlayersBookings(string name)
         {
             try

@@ -6,12 +6,14 @@ namespace PadelIT.Models
     {
         private readonly int gameSetting = 14;
         private readonly int p1, p2, p3, p4;
-        public List<GamePlayer>? Players { get; set; }
+        public List<GamePlayer> Players { get; set; }
 
-        public List<GameCourt>? GameCourts { get; set; }
+        public List<GameCourt> GameCourts { get; set; }
 
         public GameBase()
         {
+            Players = new List<GamePlayer>();
+            GameCourts = new List<GameCourt>();
             if (gameSetting == 14)
             {
                 p1 = 0; p2 = 3;
@@ -50,12 +52,65 @@ namespace PadelIT.Models
             GameCourts.Clear();
         }
 
+        public void ResetTeams()
+        {
+            GameCourts.ForEach(c => c.ClearTeams());
+        }
+
         public void SetTeams()
         {
             
         }
+
+        private void SavePlayerPoints()
+        {
+            Players.ForEach(p => p.CurrentScore += GetTeamPoints(p));
+        }
+
+        private int GetTeamPoints(GamePlayer player)
+        {
+            var playerCourt = player.CurrentCourt;
+            var team = GameCourts[playerCourt].Teams.Find(t => t.Players.Contains(player));
+            if (team != null)
+            {
+                return team.CurrentScore;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        private void EndRound()
+        {
+            SavePlayerPoints();
+            SortPlayers();
+            ResetTeams();
+        }
+        public void SetCourts(int numberOfCourts)
+        {
+            for (int i = 0; i < numberOfCourts; i++)
+            {
+                GameCourts.Add(new GameCourt(i));
+            }
+        }
+        public void StartGame()
+        {
+            int numberOfCourts = (Players.Count / 4);
+            SetCourts(numberOfCourts);
+            SetTeams();
+        }
+
+        public void UpdateTeamScore(int courtNumber, int teamNumber, int score)
+        {
+            GameCourts[courtNumber].Teams[teamNumber].CurrentScore = score;
+        }
+
         public void StartNextRound()
         {
+            EndRound();
+            ResetTeams();
+            SetTeams();
 
         }
 

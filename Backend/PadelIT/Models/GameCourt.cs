@@ -6,8 +6,7 @@ namespace PadelIT.Models
     {
 
         public int CourtNumber { get; set; }
-        public GameTeam? Team1 { get; set; }
-        public GameTeam? Team2 { get; set; }
+        public List<GameTeam> Teams { get; set; } = new List<GameTeam>();
 
         public GameCourt(int courtNumber)
         {
@@ -16,11 +15,17 @@ namespace PadelIT.Models
 
         public void SetPlayersT1(GamePlayer player1, GamePlayer player2)
         {
-            Team1 = new GameTeam(player1, player2);
+            Teams.Add(new GameTeam(player1, player2));
         }
         public void SetPlayersT2(GamePlayer player3, GamePlayer player4)
         {
-            Team2 = new GameTeam(player3, player4);
+            Teams.Add(new GameTeam(player3, player4));
         }
+        public void ClearTeams()
+        {
+            Teams.Clear();
+        }
+
+
     }
 }

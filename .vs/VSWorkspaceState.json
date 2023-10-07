@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Backend",
+    "\\Backend\\PadelIT"
   ],
+  "SelectedNode": "\\Backend\\PadelIT\\PadelIT.csproj",
   "PreviewInSolutionExplorer": false
 }

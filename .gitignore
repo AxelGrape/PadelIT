@@ -13,3 +13,6 @@
 /Api/PadelIT/obj/Debug/net6.0/PadelIT.GeneratedMSBuildEditorConfig.editorconfig
 *.v2
 *.bin
+*.suo
+/Backend/.vs
+/Backend/Mexicano/obj
